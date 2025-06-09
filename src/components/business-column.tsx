@@ -1,13 +1,16 @@
+"use client"
 
-import type { BusinessColumn as BusinessColumnType } from "../types/dashboard"
-import { MetricCard } from "./metric-card"
+import type { BusinessColumn as BusinessColumnType, DashboardInputs } from "../types/dashboard"
+import { EditableMetricCard } from "./editable-metric-card"
 import { COLUMN_TITLE_STYLES } from "../constants/styles"
 
 interface BusinessColumnProps {
   column: BusinessColumnType
+  inputs?: DashboardInputs
+  onChange?: (key: keyof DashboardInputs, value: number) => void
 }
 
-export function BusinessColumn({ column }: BusinessColumnProps) {
+export function BusinessColumn({ column, inputs, onChange }: BusinessColumnProps) {
   const hasHalfSizeCards = column.cards.some((card) => card.size === "half")
 
   return (
@@ -20,19 +23,34 @@ export function BusinessColumn({ column }: BusinessColumnProps) {
             {column.cards
               .filter((card) => card.size === "half")
               .map((card, index) => (
-                <MetricCard key={index} card={card} />
+                <EditableMetricCard
+                  key={index}
+                  card={card}
+                  value={card.inputKey && inputs ? inputs[card.inputKey] : undefined}
+                  onChange={onChange}
+                />
               ))}
           </div>
           {column.cards
             .filter((card) => card.size !== "half")
             .map((card, index) => (
-              <MetricCard key={index} card={card} />
+              <EditableMetricCard
+                key={index}
+                card={card}
+                value={card.inputKey && inputs ? inputs[card.inputKey] : undefined}
+                onChange={onChange}
+              />
             ))}
         </div>
       ) : (
         <div className="space-y-2">
           {column.cards.map((card, index) => (
-            <MetricCard key={index} card={card} />
+            <EditableMetricCard
+              key={index}
+              card={card}
+              value={card.inputKey && inputs ? inputs[card.inputKey] : undefined}
+              onChange={onChange}
+            />
           ))}
         </div>
       )}

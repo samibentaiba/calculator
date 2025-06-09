@@ -1,14 +1,17 @@
+"use client"
 
-import type { BusinessSection as BusinessSectionType } from "../types/dashboard"
+import type { BusinessSection as BusinessSectionType, DashboardInputs } from "../types/dashboard"
 import { SectionIcon } from "./section-icon"
 import { BusinessColumn } from "./business-column"
 import { SECTION_TITLE_STYLES } from "../constants/styles"
 
 interface BusinessSectionProps {
   section: BusinessSectionType
+  inputs?: DashboardInputs
+  onChange?: (key: keyof DashboardInputs, value: number) => void
 }
 
-export function BusinessSection({ section }: BusinessSectionProps) {
+export function BusinessSection({ section, inputs, onChange }: BusinessSectionProps) {
   return (
     <div className="flex items-start gap-4">
       <div className="flex flex-col items-center gap-2">
@@ -18,7 +21,7 @@ export function BusinessSection({ section }: BusinessSectionProps) {
 
       <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
         {section.columns.map((column, index) => (
-          <BusinessColumn key={index} column={column} />
+          <BusinessColumn key={index} column={column} inputs={inputs} onChange={onChange} />
         ))}
       </div>
     </div>
