@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { useState, useMemo } from "react"
-import type { DashboardInputs } from "../types/dashboard"
-import { calculateDashboardValues } from "../utils/calculations"
+import { useState, useMemo } from "react";
+import type { DashboardInputs } from "../types/dashboard";
+import { calculateDashboardValues } from "../lib/calculations";
 
 export function useDashboardCalculations() {
   const [inputs, setInputs] = useState<DashboardInputs>({
@@ -23,19 +23,19 @@ export function useDashboardCalculations() {
     upsellPrice: 0,
     vatFee: 0,
     codFee: 0,
-  })
+  });
 
   const calculatedValues = useMemo(() => {
-    return calculateDashboardValues(inputs)
-  }, [inputs])
+    return calculateDashboardValues(inputs);
+  }, [inputs]);
 
   const updateInput = (key: keyof DashboardInputs, value: number) => {
-    setInputs((prev) => ({ ...prev, [key]: value }))
-  }
+    setInputs((prev) => ({ ...prev, [key]: value }));
+  };
 
   return {
     inputs,
     calculatedValues,
     updateInput,
-  }
+  };
 }

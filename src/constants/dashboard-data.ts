@@ -1,12 +1,11 @@
-
 import type { InputField, BusinessSection, SummaryMetric } from "../types/dashboard"
 
 export const INPUT_FIELDS: InputField[] = [
-  { id: "selling-price", label: "selling price", value: "60" },
+  { id: "sellingPrice", label: "selling price", value: "60" },
   { id: "leads", label: "leads", value: "350" },
-  { id: "confirmation-rate", label: "confirmation rate", value: "50", hasPercentage: true },
-  { id: "delivery-rate", label: "delivery rate", value: "50", hasPercentage: true },
-  { id: "upsell-rate", label: "upsell rate", value: "0", hasPercentage: true },
+  { id: "confirmationRate", label: "confirmation rate", value: "50", hasPercentage: true },
+  { id: "deliveryRate", label: "delivery rate", value: "50", hasPercentage: true },
+  { id: "upsellRate", label: "upsell rate", value: "0", hasPercentage: true },
 ]
 
 export const BUSINESS_SECTIONS: BusinessSection[] = [

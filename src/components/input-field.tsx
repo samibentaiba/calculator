@@ -18,16 +18,29 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
     onChange(field.id as keyof DashboardInputs, numValue)
   }
 
+  // Ensure value is always a number (default to 0)
+  const safeValue = typeof value === "number" ? value : 0
+
   return (
     <div className="space-y-2">
       <Label className="text-sm text-gray-600">{field.label}</Label>
       {field.hasPercentage ? (
         <div className="relative">
-          <Input type="number" value={value} onChange={handleChange} className="h-12 pr-8" />
+          <Input
+            type="number"
+            value={safeValue}
+            onChange={handleChange}
+            className="h-12 pr-8"
+          />
           <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
         </div>
       ) : (
-        <Input type="number" value={value} onChange={handleChange} className="h-12" />
+        <Input
+          type="number"
+          value={safeValue}
+          onChange={handleChange}
+          className="h-12"
+        />
       )}
     </div>
   )

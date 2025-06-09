@@ -4,11 +4,10 @@ export function calculateDashboardValues(
   inputs: DashboardInputs
 ): CalculatedValues {
   // Figure 2: confirmation leads = leads × confirmation rate
-  const confirmationLeads = inputs.leads * inputs.confirmationRate;
+  const confirmationLeads = inputs.leads * (inputs.confirmationRate / 100);
 
   // Figure 1: Product Quantity = confirmation leads × delivery rate
-  const productQuantity = confirmationLeads * inputs.deliveryRate;
-
+  const productQuantity = confirmationLeads * (inputs.deliveryRate /100) ;
   // Figure 3: product total = product quantity × product cost
   const productTotal = productQuantity * inputs.productCost;
 
