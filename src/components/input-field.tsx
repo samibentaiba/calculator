@@ -23,13 +23,17 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value
-    setInputValue(raw)
 
-    const sanitized = raw.replace(",", ".")
-    const num = Number.parseFloat(sanitized)
+    // Allow only digits with optional one comma or dot
+    if (/^[0-9]*[.,]?[0-9]*$/.test(raw)) {
+      setInputValue(raw)
 
-    if (!Number.isNaN(num)) {
-      onChange(field.id as keyof DashboardInputs, num)
+      const sanitized = raw.replace(",", ".")
+      const num = Number.parseFloat(sanitized)
+
+      if (!Number.isNaN(num)) {
+        onChange(field.id as keyof DashboardInputs, num)
+      }
     }
   }
 
