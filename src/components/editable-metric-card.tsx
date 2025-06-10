@@ -1,45 +1,80 @@
-"use client"
+"use client";
 
-import type React from "react"
-import type { MetricCard as MetricCardType, DashboardInputs } from "../types/dashboard"
-import { CARD_STYLES, CARD_BASE_STYLES, CARD_LABEL_STYLES, CARD_VALUE_STYLES } from "../constants/styles"
+import React, { useState, useEffect } from "react";
+import type {
+  MetricCard as MetricCardType,
+  DashboardInputs,
+} from "../types/dashboard";
+import {
+  CARD_STYLES,
+  CARD_BASE_STYLES,
+  CARD_LABEL_STYLES,
+  CARD_VALUE_STYLES,
+} from "../constants/styles";
 
 interface EditableMetricCardProps {
-  card: MetricCardType
-  value?: number
-  onChange?: (key: keyof DashboardInputs, value: number) => void
+  card: MetricCardType;
+  value?: number;
+  onChange?: (key: keyof DashboardInputs, value: number) => void;
+}
+function isFormattedCurrency(value: string) {
+  return (
+    typeof value === "string" && /^\d+([.,]\d{1,2})? \$?$/.test(value.trim())
+  );
 }
 
-export function EditableMetricCard({ card, value, onChange }: EditableMetricCardProps) {
-  const cardClasses = `${CARD_BASE_STYLES} ${CARD_STYLES[card.type]}`
+export function EditableMetricCard({
+  card,
+  value,
+  onChange,
+}: EditableMetricCardProps) {
+  const cardClasses = `${CARD_BASE_STYLES} ${CARD_STYLES[card.type]}`;
+  const [inputValue, setInputValue] = useState("");
+
+  // sync inputValue when value prop changes
+  useEffect(() => {
+    if (typeof value === "number" && !Number.isNaN(value)) {
+      setInputValue(value.toString());
+    }
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (card.isEditable && card.inputKey && onChange) {
-      const numValue = Number.parseFloat(e.target.value) || 0
-      onChange(card.inputKey, numValue)
+    const raw = e.target.value;
+    setInputValue(raw);
+
+    // Replace comma with dot for consistent decimal parsing
+    const sanitized = raw.replace(",", ".");
+    const parsed = Number.parseFloat(sanitized);
+
+    if (!Number.isNaN(parsed) && card.isEditable && card.inputKey && onChange) {
+      onChange(card.inputKey, parsed);
     }
-  }
+  };
 
   if (card.isEditable && card.inputKey && value !== undefined) {
     return (
       <div className={cardClasses}>
         <div className={CARD_LABEL_STYLES}>{card.label}</div>
         <input
-          type="number"
-          step="0.01"
-          value={value.toString()}
+          type="text"
+          inputMode="decimal"
+          value={inputValue}
           onChange={handleChange}
           className="bg-transparent text-center text-xl font-bold text-white border-none outline-none w-full placeholder-white/70"
-          placeholder="0"
+          placeholder="NaN"
         />
       </div>
-    )
+    );
   }
 
   return (
     <div className={cardClasses}>
       <div className={CARD_LABEL_STYLES}>{card.label}</div>
-      <div className={CARD_VALUE_STYLES}>{card.value}</div>
+      <div className={CARD_VALUE_STYLES}>
+        {isFormattedCurrency(card.value)
+          ? card.value.toString()
+          : Math.floor(Number(card.value))}
+      </div>
     </div>
-  )
+  );
 }

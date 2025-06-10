@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-
+import React, { useEffect, useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import type { InputField as InputFieldType, DashboardInputs } from "../types/dashboard"
@@ -13,13 +12,26 @@ interface InputFieldProps {
 }
 
 export function InputField({ field, value, onChange }: InputFieldProps) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const numValue = Number.parseFloat(e.target.value) || 0
-    onChange(field.id as keyof DashboardInputs, numValue)
-  }
+  const [inputValue, setInputValue] = useState("")
 
-  // Ensure value is always a number (default to 0)
-  const safeValue = typeof value === "number" ? value : 0
+  // Sync input value when external value updates
+  useEffect(() => {
+    if (typeof value === "number" && !Number.isNaN(value)) {
+      setInputValue(value.toString())
+    }
+  }, [value])
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value
+    setInputValue(raw)
+
+    const sanitized = raw.replace(",", ".")
+    const num = Number.parseFloat(sanitized)
+
+    if (!Number.isNaN(num)) {
+      onChange(field.id as keyof DashboardInputs, num)
+    }
+  }
 
   return (
     <div className="space-y-2">
@@ -27,19 +39,23 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
       {field.hasPercentage ? (
         <div className="relative">
           <Input
-            type="number"
-            value={safeValue.toString()}
+            type="text"
+            inputMode="decimal"
+            value={inputValue}
             onChange={handleChange}
             className="h-12 pr-8"
+            placeholder="NaN"
           />
           <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
         </div>
       ) : (
         <Input
-          type="number"
-          value={safeValue.toString()}
+          type="text"
+          inputMode="decimal"
+          value={inputValue}
           onChange={handleChange}
           className="h-12"
+          placeholder="NaN"
         />
       )}
     </div>
