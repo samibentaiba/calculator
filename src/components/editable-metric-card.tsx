@@ -27,7 +27,7 @@ export function EditableMetricCard({ card, value, onChange }: EditableMetricCard
         <input
           type="number"
           step="0.01"
-          value={value}
+          value={value.toString()}
           onChange={handleChange}
           className="bg-transparent text-center text-xl font-bold text-white border-none outline-none w-full placeholder-white/70"
           placeholder="0"

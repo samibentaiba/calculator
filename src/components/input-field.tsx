@@ -28,7 +28,7 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
         <div className="relative">
           <Input
             type="number"
-            value={safeValue}
+            value={safeValue.toString()}
             onChange={handleChange}
             className="h-12 pr-8"
           />
@@ -37,7 +37,7 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
       ) : (
         <Input
           type="number"
-          value={safeValue}
+          value={safeValue.toString()}
           onChange={handleChange}
           className="h-12"
         />
