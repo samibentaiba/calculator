@@ -40,7 +40,7 @@ export function EditableMetricCard({
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let raw = e.target.value;
+    const raw = e.target.value;
 
     // Allow only digits and one decimal point
     if (/^[0-9]*[.,]?[0-9]*$/.test(raw)) {
