@@ -17,6 +17,7 @@ interface EditableMetricCardProps {
   value?: number;
   onChange?: (key: keyof DashboardInputs, value: number) => void;
 }
+
 function isFormattedCurrency(value: string) {
   return (
     typeof value === "string" && /^\d+([.,]\d{1,2})? \$?$/.test(value.trim())
@@ -39,22 +40,26 @@ export function EditableMetricCard({
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    setInputValue(raw);
+    let raw = e.target.value;
 
-    // Replace comma with dot for consistent decimal parsing
-    const sanitized = raw.replace(",", ".");
-    const parsed = Number.parseFloat(sanitized);
+    // Allow only digits and one decimal point
+    if (/^[0-9]*[.,]?[0-9]*$/.test(raw)) {
+      // Replace comma with dot
+      const sanitized = raw.replace(",", ".");
+      setInputValue(raw);
 
-    if (!Number.isNaN(parsed) && card.isEditable && card.inputKey && onChange) {
-      onChange(card.inputKey, parsed);
+      const parsed = parseFloat(sanitized);
+
+      if (!Number.isNaN(parsed) && card.isEditable && card.inputKey && onChange) {
+        onChange(card.inputKey, parsed);
+      }
     }
   };
 
   if (card.isEditable && card.inputKey && value !== undefined) {
     return (
       <div className={cardClasses}>
-        <div className={CARD_LABEL_STYLES}>{card.label}</div>
+        <div className={CARD_LABEL_STYLES} aria-hidden="true">{card.label}</div>
         <input
           type="text"
           inputMode="decimal"
@@ -69,7 +74,7 @@ export function EditableMetricCard({
 
   return (
     <div className={cardClasses}>
-      <div className={CARD_LABEL_STYLES}>{card.label}</div>
+      <div className={CARD_LABEL_STYLES} aria-hidden="true">{card.label}</div>
       <div className={CARD_VALUE_STYLES}>
         {isFormattedCurrency(card.value)
           ? card.value.toString()
