@@ -1,10 +1,11 @@
 import type { InputField, BusinessSection, SummaryMetric } from "../types/dashboard"
 
+// Update the INPUT_FIELDS values to 0
 export const INPUT_FIELDS: InputField[] = [
-  { id: "sellingPrice", label: "selling price", value: "60" },
-  { id: "leads", label: "leads", value: "350" },
-  { id: "confirmationRate", label: "confirmation rate", value: "50", hasPercentage: true },
-  { id: "deliveryRate", label: "delivery rate", value: "50", hasPercentage: true },
+  { id: "sellingPrice", label: "selling price", value: "0" },
+  { id: "leads", label: "leads", value: "0" },
+  { id: "confirmationRate", label: "confirmation rate", value: "0", hasPercentage: true },
+  { id: "deliveryRate", label: "delivery rate", value: "0", hasPercentage: true },
   { id: "upsellRate", label: "upsell rate", value: "0", hasPercentage: true },
 ]
 
