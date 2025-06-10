@@ -1,23 +1,26 @@
-"use client";
+"use client"
 
-import { InputField } from "./components/input-field";
-import { BusinessSection } from "./components/business-section";
-import { SummaryPanel } from "./components/summary-panel";
-import { INPUT_FIELDS } from "./constants/dashboard-data";
-import { useDashboardCalculations } from "./hooks/use-dashboard-calculations";
-import {
-  formatCurrency,
-  formatPercentage,
-  formatNumber,
-} from "./lib/calculations";
-import type {
-  BusinessSection as BusinessSectionType,
-  SummaryMetric,
-} from "./types/dashboard";
+import { InputField } from "./components/input-field"
+import { BusinessSection } from "./components/business-section"
+import { SummaryPanel } from "./components/summary-panel"
+import { DashboardHeader } from "./components/dashboard-header"
+import { SectionHeader } from "./components/section-header"
+import { INPUT_FIELDS } from "./constants/dashboard-data"
+import { useDashboardCalculations } from "./hooks/use-dashboard-calculations"
+import { formatCurrency, formatPercentage, formatNumber } from "./lib/calculations"
+import type { BusinessSection as BusinessSectionType, SummaryMetric } from "./types/dashboard"
 
 export default function Component() {
-  const { inputs, calculatedValues, updateInput } = useDashboardCalculations();
-  
+  const {
+    inputs,
+    calculatedValues,
+    updateInput,
+    resetAllInputs,
+    resetOperationsInputs,
+    resetCallCenterInputs,
+    resetShippingInputs,
+  } = useDashboardCalculations()
+
   // Generate business sections with calculated values and editable green cards
   const businessSections: BusinessSectionType[] = [
     {
@@ -35,16 +38,8 @@ export default function Component() {
               isEditable: true,
               inputKey: "productCost",
             },
-            {
-              label: "quantity",
-              value: calculatedValues.productQuantity.toString(),
-              type: "quantity",
-            },
-            {
-              label: "total",
-              value: formatCurrency(calculatedValues.productTotal),
-              type: "total",
-            },
+            { label: "quantity", value: calculatedValues.productQuantity.toString(), type: "quantity" },
+            { label: "total", value: formatCurrency(calculatedValues.productTotal), type: "total" },
           ],
         },
         {
@@ -57,16 +52,8 @@ export default function Component() {
               isEditable: true,
               inputKey: "adsCost",
             },
-            {
-              label: "leads",
-              value: inputs.leads.toString(),
-              type: "quantity",
-            },
-            {
-              label: "total",
-              value: formatCurrency(calculatedValues.adsTotal),
-              type: "total",
-            },
+            { label: "leads", value: inputs.leads.toString(), type: "quantity" },
+            { label: "total", value: formatCurrency(calculatedValues.adsTotal), type: "total" },
           ],
         },
         {
@@ -107,16 +94,8 @@ export default function Component() {
               isEditable: true,
               inputKey: "confirmationFee",
             },
-            {
-              label: "leads",
-              value: calculatedValues.confirmationLeads.toString(),
-              type: "quantity",
-            },
-            {
-              label: "total",
-              value: formatCurrency(calculatedValues.confirmationTotal),
-              type: "total",
-            },
+            { label: "leads", value: calculatedValues.confirmationLeads.toString(), type: "quantity" },
+            { label: "total", value: formatCurrency(calculatedValues.confirmationTotal), type: "total" },
           ],
         },
         {
@@ -130,15 +109,11 @@ export default function Component() {
               inputKey: "upsellFee",
             },
             { label: "leads delivered", value: "0", type: "quantity" },
-            {
-              label: "total",
-              value: formatCurrency(calculatedValues.upsellTotal),
-              type: "total",
-            },
+            { label: "total", value: formatCurrency(calculatedValues.upsellTotal), type: "total" },
           ],
         },
         {
-          title: "",
+          title: "additional",
           cards: [
             {
               label: "product cost",
@@ -160,7 +135,7 @@ export default function Component() {
     },
     {
       id: "shipping",
-      title: "shipping",
+      title: "Shipping",
       icon: "truck",
       columns: [
         {
@@ -173,16 +148,8 @@ export default function Component() {
               isEditable: true,
               inputKey: "deliveryFee",
             },
-            {
-              label: "leads",
-              value: calculatedValues.productQuantity.toString(),
-              type: "quantity",
-            },
-            {
-              label: "total",
-              value: formatCurrency(calculatedValues.deliveryTotal),
-              type: "total",
-            },
+            { label: "leads", value: calculatedValues.productQuantity.toString(), type: "quantity" },
+            { label: "total", value: formatCurrency(calculatedValues.deliveryTotal), type: "total" },
           ],
         },
         {
@@ -195,16 +162,8 @@ export default function Component() {
               isEditable: true,
               inputKey: "returnFee",
             },
-            {
-              label: "leads",
-              value: calculatedValues.returnLeads.toString(),
-              type: "quantity",
-            },
-            {
-              label: "total",
-              value: formatCurrency(calculatedValues.returnTotal),
-              type: "total",
-            },
+            { label: "leads", value: calculatedValues.returnLeads.toString(), type: "quantity" },
+            { label: "total", value: formatCurrency(calculatedValues.returnTotal), type: "total" },
           ],
         },
         {
@@ -224,67 +183,83 @@ export default function Component() {
               isEditable: true,
               inputKey: "codFee",
             },
-            {
-              label: "total",
-              value: formatCurrency(calculatedValues.feesTotal),
-              type: "total",
-            },
+            { label: "total", value: formatCurrency(calculatedValues.feesTotal), type: "total" },
           ],
         },
       ],
     },
-  ];
+  ]
 
   // Generate summary metrics with calculated values
   const summaryMetrics: SummaryMetric[] = [
     { label: "Revenue", value: formatCurrency(calculatedValues.revenue) },
-    {
-      label: "invested capital",
-      value: formatCurrency(calculatedValues.investedCapital),
-    },
-    {
-      label: "ads cost per piece sold",
-      value: formatCurrency(calculatedValues.adsCostPerPieceSold),
-    },
-    {
-      label: "total profit on upsell",
-      value: formatCurrency(calculatedValues.upsellTotal),
-    },
+    { label: "invested capital", value: formatCurrency(calculatedValues.investedCapital) },
+    { label: "ads cost per piece sold", value: formatCurrency(calculatedValues.adsCostPerPieceSold) },
+    { label: "total profit on upsell", value: formatCurrency(calculatedValues.upsellTotal) },
     { label: "payment", value: formatCurrency(calculatedValues.payment) },
     { label: "net profit", value: formatCurrency(calculatedValues.netProfit) },
     { label: "R O I", value: formatPercentage(calculatedValues.roi) },
-  ];
+  ]
+
+  // Map reset functions to sections
+  const getSectionResetFunction = (sectionId: string) => {
+    switch (sectionId) {
+      case "operations":
+        return resetOperationsInputs
+      case "call-center":
+        return resetCallCenterInputs
+      case "shipping":
+        return resetShippingInputs
+      default:
+        return undefined
+    }
+  }
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Top Input Row */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
-        {INPUT_FIELDS.map((field) => (
-          <InputField
-            key={field.id}
-            field={field}
-            value={inputs[field.id as keyof typeof inputs]}
-            onChange={updateInput}
-          />
-        ))}
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors">
+      <div className="container mx-auto p-6 max-w-7xl">
+        <DashboardHeader onReset={resetAllInputs} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Column - Business Sections */}
-        <div className="lg:col-span-3 space-y-8">
-          {businessSections.map((section) => (
-            <BusinessSection
-              key={section.id}
-              section={section}
-              inputs={inputs}
-              onChange={updateInput}
-            />
-          ))}
+        {/* Input Section */}
+        <div className="mb-8">
+          <SectionHeader
+            title="Key Inputs"
+            description="Enter your primary business metrics to calculate performance indicators"
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+            {INPUT_FIELDS.map((field) => (
+              <InputField
+                key={field.id}
+                field={field}
+                value={inputs[field.id as keyof typeof inputs]}
+                onChange={updateInput}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* Right Column - Summary */}
-        <SummaryPanel metrics={summaryMetrics} />
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+          {/* Left Column - Business Sections */}
+          <div className="xl:col-span-3 space-y-8">
+            {businessSections.map((section) => (
+              <BusinessSection
+                key={section.id}
+                section={section}
+                inputs={inputs}
+                onChange={updateInput}
+                onReset={getSectionResetFunction(section.id)}
+              />
+            ))}
+          </div>
+
+          {/* Right Column - Summary */}
+          <div className="xl:col-span-1">
+            <div className="sticky top-6">
+              <SummaryPanel metrics={summaryMetrics} />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  );
+  )
 }

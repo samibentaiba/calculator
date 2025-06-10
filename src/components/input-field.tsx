@@ -39,7 +39,7 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
 
   return (
     <div className="space-y-2">
-      <Label className="text-sm text-gray-600">{field.label}</Label>
+      <Label className="text-sm font-medium text-gray-700 dark:text-gray-300 capitalize">{field.label}</Label>
       {field.hasPercentage ? (
         <div className="relative">
           <Input
@@ -47,7 +47,7 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
             inputMode="decimal"
             value={inputValue}
             onChange={handleChange}
-            className="h-12 pr-8"
+            className="h-12 pr-8 text-lg font-medium bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
             placeholder="NaN"
           />
           <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
@@ -58,7 +58,7 @@ export function InputField({ field, value, onChange }: InputFieldProps) {
           inputMode="decimal"
           value={inputValue}
           onChange={handleChange}
-          className="h-12"
+          className="h-12 text-lg font-medium bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
           placeholder="NaN"
         />
       )}

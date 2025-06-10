@@ -11,7 +11,7 @@ export function MetricCard({ card }: MetricCardProps) {
 
   return (
     <div className={cardClasses}>
-      <div className={CARD_LABEL_STYLES}>{card.label}</div>
+      <div className={CARD_LABEL_STYLES}>{card.label}TEST</div>
       <div className={CARD_VALUE_STYLES}>{card.value}</div>
     </div>
   )
