@@ -77,7 +77,6 @@ export function CompactBusinessSection({
                               : undefined
                           }
                           onChange={onChange}
-                          isHalf
                         />
                       ))}
                   </div>

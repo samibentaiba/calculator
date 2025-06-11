@@ -24,7 +24,7 @@ function isFormattedCurrency(value: string) {
   )
 }
 
-export function CompactMetricCard({ card, value, onChange, isHalf = false }: CompactMetricCardProps) {
+export function CompactMetricCard({ card, value, onChange }: CompactMetricCardProps) {
   const [inputValue, setInputValue] = useState("")
 
   useEffect(() => {
