@@ -217,16 +217,16 @@ export default function Component() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors">
-      <div className="container mx-auto p-6 max-w-7xl">
+      <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6">
         <DashboardHeader onReset={resetAllInputs} />
 
         {/* Input Section */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <SectionHeader
             title="Key Inputs"
             description="Enter your primary business metrics to calculate performance indicators"
           />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6 p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
             {INPUT_FIELDS.map((field) => (
               <InputField
                 key={field.id}
@@ -238,9 +238,10 @@ export default function Component() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+        {/* Main Content Grid - Business Sections + Summary Panel */}
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 sm:gap-8">
           {/* Left Column - Business Sections */}
-          <div className="xl:col-span-3 space-y-8">
+          <div className="xl:col-span-3 space-y-6 sm:space-y-8">
             {businessSections.map((section) => (
               <BusinessSection
                 key={section.id}
@@ -252,9 +253,9 @@ export default function Component() {
             ))}
           </div>
 
-          {/* Right Column - Summary */}
+          {/* Right Column - Summary Panel */}
           <div className="xl:col-span-1">
-            <div className="sticky top-6">
+            <div className="xl:sticky xl:top-6">
               <SummaryPanel metrics={summaryMetrics} />
             </div>
           </div>

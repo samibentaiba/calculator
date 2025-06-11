@@ -7,7 +7,7 @@ export function calculateDashboardValues(
   const confirmationLeads = inputs.leads * (inputs.confirmationRate / 100);
 
   // Figure 1: Product Quantity = confirmation leads × delivery rate
-  const productQuantity = confirmationLeads * (inputs.deliveryRate /100) ;
+  const productQuantity = confirmationLeads * (inputs.deliveryRate / 100);
   // Figure 3: product total = product quantity × product cost
   const productTotal = productQuantity * inputs.productCost;
 
@@ -33,17 +33,19 @@ export function calculateDashboardValues(
   // Figure 12: return total = return leads × return return
   const returnTotal = returnLeads * inputs.returnFee;
 
-  // Figure 9: revenue = invested capital - delivery total - return total
-  const netProfit = revenue - investedCapital - deliveryTotal - returnTotal;
+  // Additional calculations for call center
+  const confirmationTotal =
+    (inputs.confirmationNewFee + inputs.confirmationFee) * confirmationLeads;
+
+  // Figure 9: revenue = invested capital - delivery total - return total - confirmation total
+  const netProfit =
+    revenue - investedCapital - deliveryTotal - returnTotal - confirmationTotal;
   // Figure 10: payment = net profile + invested capital
   const payment = netProfit + investedCapital;
 
   // Figure 13: R.O.I = net profile / invested capital × 100
   const roi = investedCapital > 0 ? (netProfit / investedCapital) * 100 : 0;
 
-    // Additional calculations for call center
-  const confirmationTotal =
-    (inputs.confirmationNewFee + inputs.confirmationFee) * confirmationLeads;
   const upsellTotal = inputs.upsellFee * 0; // No upsell leads currently
   const feesTotal = inputs.vatFee + inputs.codFee;
 

@@ -8,7 +8,7 @@ interface SectionResetButtonProps {
   sectionName: string
 }
 
-export function SectionResetButton({ onReset, sectionName }: SectionResetButtonProps) {
+export function SectionResetButton({ onReset }: SectionResetButtonProps) {
   return (
     <Button
       onClick={onReset}
