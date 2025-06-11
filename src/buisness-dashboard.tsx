@@ -5,8 +5,10 @@ import { BusinessSection } from "./components/business-section"
 import { SummaryPanel } from "./components/summary-panel"
 import { DashboardHeader } from "./components/dashboard-header"
 import { SectionHeader } from "./components/section-header"
+import { ProductivityLayout } from "./components/productivity-layout"
 import { INPUT_FIELDS } from "./constants/dashboard-data"
 import { useDashboardCalculations } from "./hooks/use-dashboard-calculations"
+import { useUIMode } from "./hooks/use-ui-mode"
 import { formatCurrency, formatPercentage, formatNumber } from "./lib/calculations"
 import type { BusinessSection as BusinessSectionType, SummaryMetric } from "./types/dashboard"
 
@@ -21,7 +23,9 @@ export default function Component() {
     resetShippingInputs,
   } = useDashboardCalculations()
 
-  // Generate business sections with calculated values and editable green cards
+  const { uiMode, setUIMode } = useUIMode()
+
+  // Generate business sections with calculated values
   const businessSections: BusinessSectionType[] = [
     {
       id: "operations",
@@ -190,7 +194,7 @@ export default function Component() {
     },
   ]
 
-  // Generate summary metrics with calculated values
+  // Generate summary metrics
   const summaryMetrics: SummaryMetric[] = [
     { label: "Revenue", value: formatCurrency(calculatedValues.revenue) },
     { label: "invested capital", value: formatCurrency(calculatedValues.investedCapital) },
@@ -203,63 +207,68 @@ export default function Component() {
 
   // Map reset functions to sections
   const getSectionResetFunction = (sectionId: string) => {
-    switch (sectionId) {
-      case "operations":
-        return resetOperationsInputs
-      case "call-center":
-        return resetCallCenterInputs
-      case "shipping":
-        return resetShippingInputs
-      default:
-        return undefined
+    const resetFunctions = {
+      operations: resetOperationsInputs,
+      "call-center": resetCallCenterInputs,
+      shipping: resetShippingInputs,
     }
+    return resetFunctions[sectionId as keyof typeof resetFunctions]
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 transition-colors">
       <div className="w-full max-w-[1600px] mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6">
-        <DashboardHeader onReset={resetAllInputs} />
+        <DashboardHeader onReset={resetAllInputs} uiMode={uiMode} onModeChange={setUIMode} />
 
-        {/* Input Section */}
-        <div className="mb-6 sm:mb-8">
-          <SectionHeader
-            title="Key Inputs"
-            description="Enter your primary business metrics to calculate performance indicators"
+        {uiMode === "productivity" ? (
+          <ProductivityLayout
+            inputs={inputs}
+            updateInput={updateInput}
+            businessSections={businessSections}
+            summaryMetrics={summaryMetrics}
+            getSectionResetFunction={getSectionResetFunction}
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6 p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
-            {INPUT_FIELDS.map((field) => (
-              <InputField
-                key={field.id}
-                field={field}
-                value={inputs[field.id as keyof typeof inputs]}
-                onChange={updateInput}
+        ) : (
+          <>
+            {/* Guest Mode - Original Layout */}
+            <div className="mb-6 sm:mb-8">
+              <SectionHeader
+                title="Key Inputs"
+                description="Enter your primary business metrics to calculate performance indicators"
               />
-            ))}
-          </div>
-        </div>
-
-        {/* Main Content Grid - Business Sections + Summary Panel */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 sm:gap-8">
-          {/* Left Column - Business Sections */}
-          <div className="xl:col-span-3 space-y-6 sm:space-y-8">
-            {businessSections.map((section) => (
-              <BusinessSection
-                key={section.id}
-                section={section}
-                inputs={inputs}
-                onChange={updateInput}
-                onReset={getSectionResetFunction(section.id)}
-              />
-            ))}
-          </div>
-
-          {/* Right Column - Summary Panel */}
-          <div className="xl:col-span-1">
-            <div className="xl:sticky xl:top-6">
-              <SummaryPanel metrics={summaryMetrics} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6 p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow duration-200">
+                {INPUT_FIELDS.map((field) => (
+                  <InputField
+                    key={field.id}
+                    field={field}
+                    value={inputs[field.id as keyof typeof inputs]}
+                    onChange={updateInput}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
+
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 sm:gap-8">
+              <div className="xl:col-span-3 space-y-6 sm:space-y-8">
+                {businessSections.map((section) => (
+                  <BusinessSection
+                    key={section.id}
+                    section={section}
+                    inputs={inputs}
+                    onChange={updateInput}
+                    onReset={getSectionResetFunction(section.id)}
+                  />
+                ))}
+              </div>
+
+              <div className="xl:col-span-1">
+                <div className="xl:sticky xl:top-6">
+                  <SummaryPanel metrics={summaryMetrics} />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
